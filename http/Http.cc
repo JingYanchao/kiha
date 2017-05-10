@@ -121,6 +121,22 @@ namespace kiha
                 HttpRequest* request = &http->currentHttprequest;
                 request->method_ = std::string(http_method_str(
                         (enum http_method) parser->method));
+
+                //this http version is http11
+                if(parser->http_major == 1 && parser->http_minor == 1)
+                {
+                    request->version_ = request->HTTP11;
+                }
+                //this http version is http10
+                else if(parser->http_major == 1 && parser->http_minor == 0)
+                {
+                    request->version_ = request->HTTP10;
+                }
+                //this http version is unknown
+                else
+                {
+                    request->version_ = request->UNKNOWN;
+                }
                 http->state = FINISH;
             }
                 break;

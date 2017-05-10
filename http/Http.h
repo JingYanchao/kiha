@@ -32,7 +32,7 @@ namespace kiha
             START = 0,
             FINISH = 1
         };
-        Http()
+        Http():currentHttpresponse(0)
         {
             context.responseParser.data = this;
             context.requestParser.data = this;

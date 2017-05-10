@@ -34,7 +34,6 @@ namespace kiha
     void Server::onMessage(const muduo::net::TcpConnectionPtr &conn, muduo::net::Buffer *buf, muduo::Timestamp time)
     {
         Http* http = boost::any_cast<Http>(conn->getMutableContext());
-        LOG_INFO<<http->currentHttprequest.path_.size();
         http->context.requestParser.data = http;
         http->context.responseParser.data = http;
 
@@ -53,9 +52,48 @@ namespace kiha
             http->reset();
         }
     }
+
     void Server::onRequest(const muduo::net::TcpConnectionPtr & conn, const HttpRequest & request)
     {
-        LOG_INFO<<request.method();
+        const std::string& connection = request.getHeader("connection");
+        bool close = connection == "close" || (request.getVersion() == request.HTTP10&&connection != "Keep-Alive");
+        std::string path = "/home/jyc/myproject/kiha/static";
+        path+=request.path_;
+        HttpResponse response(close);
+        response.setStatusCode(200);
+        response.setStatusMessage("OK");
+        muduo::net::Buffer buff;
+        std::string file;
+        if(!readFile(path,file))
+        {
+            response.setStatusCode(404);
+            response.setStatusMessage("not Found");
+            readFile("/home/jyc/myproject/kiha/static/404page.html",file);
+        }
+        response.setBody(file);
+        response.appendToBuffer(&buff);
+//        LOG_INFO<<buff.readableBytes();
+        conn->send(&buff);
+        if(close)
+        {
+            conn->shutdown();
+        }
+
+    }
+
+    int Server::readFile(const std::string& path, std::string &buf)
+    {
+        FILE* fp;
+        size_t rc;
+        char str[65535];
+        if((fp = fopen(path.c_str(),"r"))==NULL)
+            return 0;
+        while((rc = fread(str,sizeof(char),65535,fp))!=0)
+        {
+            buf.append(str,rc);
+        }
+        fclose(fp);
+        return 1;
     }
 
 }

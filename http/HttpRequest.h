@@ -74,7 +74,6 @@ namespace kiha
 
         void setPath(std::string& path)
         {
-            LOG_INFO<<path_.size();
             path_.assign(path);
         }
 

@@ -25,6 +25,8 @@ namespace kiha
                        muduo::Timestamp time);
         void onRequest(const muduo::net::TcpConnectionPtr&, const HttpRequest&);
 
+        int readFile(const std::string& path,std::string& buff);
+
         muduo::net::TcpServer server_;
     };
 }

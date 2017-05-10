@@ -8,11 +8,17 @@
 #include "copyable.h"
 #include <string>
 #include <map>
+#include <muduo/net/Buffer.h>
 namespace kiha
 {
     class HttpResponse:copyable
     {
     public:
+        explicit HttpResponse(bool close)
+                : statusCode_(200),
+                  closeConnection_(close),
+                  Server_("kiha")
+        {}
         std::string currentHeaderField;
 
         void setStatusCode(int code)
@@ -34,15 +40,20 @@ namespace kiha
         void addHeader(const std::string& key, const std::string& value)
         { headers_[key] = value; }
 
-        void setBody(const std::string& body)
+        void  setBody(const std::string& body)
         { body_ = body; }
 
+        void appendToBuffer(muduo::net::Buffer* output) const;
         std::map<std::string, std::string> headers_;
+
+    private:
+
         int statusCode_;
         // FIXME: add http version
         std::string statusMessage_;
         bool closeConnection_;
         std::string body_;
+        const std::string Server_;
     };
 }
 #endif //HTTPSERVER_HTTPRESPONSE_H

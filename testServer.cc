@@ -7,6 +7,7 @@
 using namespace kiha;
 int main()
 {
+    muduo::Logger::setLogLevel(muduo::Logger::WARN);
     LOG_INFO << "pid = " << getpid();
     muduo::net::EventLoop loop;
     muduo::net::InetAddress listenAddr(2007);
