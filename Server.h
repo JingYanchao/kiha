@@ -17,6 +17,11 @@ namespace kiha
                const muduo::net::InetAddress& listenAddr);
 
         void start();  // calls server_.start();
+
+        void setThreadnum(size_t num)
+        {
+            server_.setThreadNum(num);
+        }
     private:
         void onConnection(const muduo::net::TcpConnectionPtr& conn);
 

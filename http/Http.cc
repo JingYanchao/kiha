@@ -171,6 +171,7 @@ namespace kiha
     }
     void Http::reset()
     {
+        LOG_WARN<<"reset";
         http_parser_init(&context.requestParser,HTTP_REQUEST);
         http_parser_init(&context.responseParser,HTTP_RESPONSE);
         context.requestParser.data = this;

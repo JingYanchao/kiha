@@ -36,7 +36,6 @@ namespace kiha
         Http* http = boost::any_cast<Http>(conn->getMutableContext());
         http->context.requestParser.data = http;
         http->context.responseParser.data = http;
-
         if(!http->parseRequest(buf,time))
         {
             //encounter error when parser the http request
@@ -49,7 +48,8 @@ namespace kiha
             //got the complete infomation
             onRequest(conn,http->currentHttprequest);
             //TODO add the reset
-            http->reset();
+            conn->setContext(Http());
+            buf->retrieveAll();
         }
     }
 

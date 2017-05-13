@@ -12,6 +12,7 @@ int main()
     muduo::net::EventLoop loop;
     muduo::net::InetAddress listenAddr(2007);
     Server server(&loop, listenAddr);
+    server.setThreadnum(0);
     server.start();
     loop.loop();
 }
